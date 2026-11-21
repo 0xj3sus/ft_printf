@@ -1,53 +1,51 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                       :::      ::::::::    */
+/*   ft_printf.c                                       :+:      :+:    :+:    */
+/*                                                   +:+ +:+         +:+      */
+/*   By: yhayyani <yhayyani@student.1337.ma>       #+#  +:+       +#+         */
+/*                                               +#+#+#+#+#+   +#+            */
+/*   Created: 2026/11/18 01:56:22 by yhayyani         #+#    #+#              */
+/*   Updated: 2026/11/21 05:23:21 by yhayyani        ###   ########.fr        */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-int ft_printf(const char *format, ...)
+static int	pf_process(const char *format, va_list *args)
 {
-    va_list args;
-    int i;
-    int count;
-    int ret;
+	int	i;
+	int	count;
+	int	ret;
 
-    i = 0;
-    count = 0;
-    va_start(args, format);
-    while (format[i])
-    {
-        if (format[i] == '%' && format[i + 1] == 'c')
-        {
-            ret = pf_putchar(va_arg(args, int));
-            i++;
-        }
-        else if (format[i] == '%' && format[i + 1] == 's')
-        {
-            ret = pf_putstr(va_arg(args, char *));
-            i++;
-        }
-        else if (format[i] == '%' && format[i + 1] == '%')
-        {
-            ret = ret = pf_putchar('%');
-            i++;
-        }
-        else if (format[i] == '%' &&
-                 (format[i + 1] == 'd' || format[i + 1] == 'i'))
-        {
-            ret = pf_putnbr(va_arg(args, int));
-            i++;
-        }
-        else if (format[i] == '%' && format[i + 1] == 'u')
-        {
-            ret = pf_putunsigned(va_arg(args, unsigned int));
-            i++;
-        }
-        else
-            ret = pf_putchar(format[i]);
-        if (ret == -1)
-        {
-            va_end(args);
-            return (-1);
-        }
-        count += ret;
-        i++;
-    }
-    va_end(args);
-    return (count);
+	i = 0;
+	count = 0;
+	while (format[i])
+	{
+		if (format[i] == '%')
+		{
+			i++;
+			ret = pf_convert(format[i], args);
+		}
+		else
+			ret = pf_putchar(format[i]);
+		if (ret == -1)
+			return (-1);
+		count += ret;
+		i++;
+	}
+	return (count);
+}
+
+int	ft_printf(const char *format, ...)
+{
+	va_list	args;
+	int		count;
+
+	if (!format)
+		return (-1);
+	va_start(args, format);
+	count = pf_process(format, &args);
+	va_end(args);
+	return (count);
 }
