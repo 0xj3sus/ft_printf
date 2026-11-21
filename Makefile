@@ -6,7 +6,7 @@ AR = ar
 ARFLAGS = rcs
 RM = rm -f
 
-SRCS = ft_printf.c ft_printf_output.c ft_printf_numbers.c ft_printf_format.c
+SRCS = ft_printf.c ft_printf_output.c 
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
