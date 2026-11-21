@@ -19,5 +19,5 @@ int pf_putstr(char *s)
             return (-1);
         i++;
     }
-    return (0);
+    return (i);
 }
